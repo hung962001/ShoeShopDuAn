@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ShoeShopDuAn.Models.SP.News>
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <h1 class="display-5 mb-3">Tin tức mới nhất</h1>
+        </div>
+        <div class="row g-4">
+            @foreach (var post in Model)
+            {
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <img class="img-fluid blog-image" src="@post.Image" alt="">
+                    <div class="bg-light p-4">
+                        <a class="d-block h5 lh-base mb-3" href="@Url.Action("DetailNews", "Blog", new { id = post.Id })">@post.Title</a>
+                        <div class="text-muted border-top pt-4">
+                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>@post.CreatedBy</small>
+                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>@post.CreatedDate.ToString("dd MMM, yyyy")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<style>
+    .blog-image {
+        height: 200px; /* Hoặc kích thước bạn muốn */
+        object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */
+        width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng của cột */
+    }
+
+</style>

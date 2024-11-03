@@ -1,0 +1,120 @@
+﻿@model ShoeShopDuAn.Models.SP.News
+@{
+    ViewBag.Title = "Chi tiết tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid page-header wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a class="text-body" href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-body" href="@Url.Action("Index", "Blog")">Tin tức</a></li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container-xxl py-6">
+    <div class="container">
+        <div class="row">
+            <!-- Nội dung bài viết -->
+            <div class="col-lg-8">
+                <div class="post-content bg-white p-4 shadow-sm rounded mb-4">
+                    <!-- Hình ảnh bài viết -->
+                    <img class="img-fluid w-100 mb-4 post-image" src="@(!string.IsNullOrEmpty(Model.Image) ? Model.Image : Url.Content("~/images/default.png"))" alt="@Model.Title">
+
+                    <!-- Tiêu đề bài viết -->
+                    <h2 class="display-6 mb-4 font-weight-bold">@Model.Title</h2>
+
+                    <!-- Ngày đăng và người đăng -->
+                    <div class="text-muted border-bottom pb-2 mb-4">
+                        <small><i class="fa fa-user text-success me-2"></i>Đăng bởi: Admin</small>
+                        <small class="ms-3"><i class="fa fa-calendar text-success me-2"></i>@Model.CreatedDate.ToString("dd/MM/yyyy")</small>
+                    </div>
+
+                    <!-- Nội dung chi tiết -->
+                    <p>@Html.Raw(Model.Detail)</p>
+
+                    <!-- Chia sẻ bài viết -->
+                    <div class="share-section mt-4">
+                        <button id="shareButton" class="btn btn-success"><i class="fa fa-share"></i> Chia sẻ</button>
+                    </div>
+                </div>
+
+                <!-- Phần bình luận -->
+                <div class="comments bg-light p-4 shadow-sm rounded mt-5">
+                    <h4 class="mb-3">Bình luận</h4>
+                    <form action="@Url.Action("AddComment", "Blog")" method="post" class="comment-form mb-4">
+                        <div class="form-group mb-3">
+                            <textarea id="commentContent" name="Content" class="form-control" rows="4" placeholder="Viết bình luận của bạn..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                    </form>
+
+                    <!-- Hiển thị các bình luận -->
+                    <div class="comments-section mt-4">
+                        <h5 class="mb-3">Các bình luận mới nhất</h5>
+                        <div class="comment-item mb-3 p-3 rounded shadow-sm">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-user-circle me-2 text-success"></i>
+                                <strong>Người dùng 1</strong>
+                                <span class="ms-3 text-muted small">25/10/2023</span>
+                            </div>
+                            <p>Nội dung bình luận 1...</p>
+                        </div>
+                        <!-- Hiển thị thêm các bình luận khác -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar bên cạnh (để trống hoặc có thể thêm nội dung khác nếu cần) -->
+        </div>
+    </div>
+</div>
+
+<!-- CSS -->
+<style>
+    .post-content {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .post-image {
+        border-radius: 5px;
+        object-fit: cover;
+    }
+
+    .share-section .btn {
+        background-color: #28a745;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+        .share-section .btn:hover {
+            background-color: #218838;
+        }
+
+    /* Comment Styling */
+    .comments-section .comment-item {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    /* Form Styling */
+    .comment-form .form-control {
+        border: 1px solid #28a745;
+    }
+
+    /* Button Hover */
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<!-- Script chia sẻ và sao chép link bài viết -->
+<script>
+    document.getElementById("shareButton").addEventListener("click", function () {
+        alert("Chia sẻ liên kết bài viết!");
+    });
+</script>

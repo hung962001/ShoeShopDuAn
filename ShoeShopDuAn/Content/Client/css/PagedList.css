@@ -1,0 +1,39 @@
+﻿/* pagedlist.css */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+    .pagination a,
+    .pagination span {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        margin: 0 0.25rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1rem;
+    }
+
+        .pagination a:hover {
+            background-color: #e9ecef;
+            border-color: #ddd;
+        }
+
+    .pagination .current {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .pagination .disabled {
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+
+        .pagination .disabled a {
+            cursor: not-allowed;
+        }

@@ -1,0 +1,142 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.News>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid page-header wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+        <h1 class="display-3 mb-3 animated slideInDown">Tin Tức</h1>
+        <nav aria-label="breadcrumb animated slideInDown">    
+        </nav>
+    </div>
+</div>
+
+<div class="container-xxl py-6">
+    <div class="container">
+        <!-- Search Bar and Sort Dropdown -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-8 mb-2 mb-md-0">
+                <form action="@Url.Action("Index", "blog")" method="get" class="form-inline" style="max-width: 300px;">
+                    <div class="input-group">
+                        <input type="text" name="searchNews" value="@Request.QueryString["searchNews"]" placeholder="Tìm kiếm tin tức..." class="form-control border-success" />
+                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-md-end">
+                <select id="sortOrder" name="sortOrder" class="form-select border-success" style="max-width: 150px; height: 35px; padding: 0 10px;">
+                    <option value="">Sắp xếp</option>
+                    <option value="az" @(Request.QueryString["sortOrder"] == "az" ? "selected" : "")>A-Z</option>
+                    <option value="za" @(Request.QueryString["sortOrder"] == "za" ? "selected" : "")>Z-A</option>
+                    <option value="date_desc" @(Request.QueryString["sortOrder"] == "date_desc" ? "selected" : "")>Tin mới trước</option>
+                    <option value="date_asc" @(Request.QueryString["sortOrder"] == "date_asc" ? "selected" : "")>Tin cũ trước</option>
+                </select>
+            </div>
+
+
+            <!-- Section Header -->
+            <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <h1 class="display-5 mb-3">Tin tức nóng hổi</h1>
+            </div>
+
+            <!-- Blog List -->
+            <div class="row g-4 news-list">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var blog in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="blog-item bg-light p-4 h-100">
+                                <img class="img-fluid blog-image mb-4"
+                                     src="@Url.Content(!string.IsNullOrEmpty(blog.Image) ? blog.Image : "~/images/default.png")"
+                                     alt="Blog Image">
+                                <a class="d-block h5 lh-base mb-3 text-decoration-none"
+                                   href="@Url.Action("DetailNews", "Blog", new { id = blog.Id })"
+                                   title="@blog.Title">@blog.Title</a>
+                                <div class="text-muted border-top pt-3">
+                                    <small><i class="fa fa-calendar text-success me-2"></i>@blog.CreatedDate.ToString("dd/MM/yyyy")</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container mt-5 d-flex justify-content-center">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchNews = Request.QueryString["searchNews"], sortOrder = Request.QueryString["sortOrder"] }))
+            </div>
+        </div>
+</div>
+
+<style>
+    /* Blog Image */
+    .blog-image {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    /* Blog Item Style */
+    .blog-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Pagination Styling */
+    .pagination li {
+        border: 2px solid #28a745;
+        margin: 0 5px;
+        border-radius: 4px;
+    }
+
+    .pagination a, .pagination span {
+        color: #28a745;
+        background-color: #ffffff;
+        padding: 8px 12px;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
+    }     
+
+    .pagination .active span {
+        background-color: #28a745;
+        color: #ffffff;
+        border-color: #28a745;
+    }
+
+    /* Button and Input Styling */
+    .form-control, .form-select, .btn-success {
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#sortOrder').change(function () {
+            var sortOrder = $(this).val();
+            var searchNews = $('input[name="searchNews"]').val();
+
+            $.ajax({
+                url: '@Url.Action("Index", "blog")',
+                type: 'GET',
+                data: { sortOrder: sortOrder, searchNews: searchNews },
+                success: function (result) {
+                    $('.news-list').html($(result).find('.news-list').html());
+                    $('.pagination-container').html($(result).find('.pagination-container').html());
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi sắp xếp.');
+                }
+            });
+        });
+    });
+</script>

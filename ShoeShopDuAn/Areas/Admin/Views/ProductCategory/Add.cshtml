@@ -1,0 +1,61 @@
+﻿@model ShoeShopDuAn.Models.SP.ProductCategories
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header mb-4">
+            <h3 class="fw-bold text-primary">Thêm danh mục sản phẩm</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="/Admin/ProductCategory">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="current">Thêm mới</li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-info text-white text-center">
+                    <h5 class="mb-0">Thêm danh mục</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-6 col-lg-4">
+                        @using (Html.BeginForm("add", "ProductCategory", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(false)
+
+                            <div class="mb-3">
+                                <label for="titleInput" class="form-label fw-bold">Tên danh mục</label>
+                                @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Nhập tên danh mục sản phẩm" })
+                                @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                            </div>
+                       
+                            <div class="mb-3">
+                                <label for="descriptionInput" class="form-label fw-bold">Mô Tả</label>
+                                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả danh mục" })
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Lưu danh mục</button>
+                                <a href="/Admin/ProductCategory" class="btn btn-danger">Hủy bỏ</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CKEditor và CKFinder -->
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>

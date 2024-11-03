@@ -1,0 +1,274 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.News>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Trash";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Thùng rác</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Tin quảng cáo</div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-head-bg-success">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Ảnh</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Tóm tắt nội dung</th>
+                                <th scope="col">Ngày đăng</th>                               
+                                <th scope="col">Thêm lại/Xóa vĩnh viễn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var i = (Model.PageNumber - 1) * Model.PageSize + 1;
+                                foreach (var item in Model)
+                                {
+                                 
+                                    <tr data-title="@item.Title" data-date="@item.CreatedDate">
+                                        <td>@i</td>
+                                        <td>@item.Id</td>
+                                        <td><img src="@item.Image" width="70" /></td>
+                                        <td>@item.Title</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>                                      
+                                        <td>
+                                            <a href="#" data-id="@item.Id" class="btnRestore">
+                                                <i class="fas fa-undo-alt"></i>
+                                            </a>
+                                            <a href="#" data-id="@item.Id" class="btnDelete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8">No data available!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="pagination-container text-center">
+                <div class="pagination-container text-center">
+                    @Html.PagedListPager(Model, page => Url.Action("Trash", new { page, searchNews = Request.QueryString["searchNews"] }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .pagination-container {
+        margin-top: 20px;
+    }
+
+    .page-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+    }
+
+    #current-page {
+        background-color: #d2b49c; /* Màu nền cho số trang */
+        color: #ffffff; /* Màu chữ */
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 1px solid #000; /* Viền */
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .page-jump {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .page-input {
+        width: 60px;
+        margin: 0 10px;
+        padding: 5px;
+        border: 1px solid black;
+    }
+
+    .modal-header .btn-close {
+        background-color: transparent;
+    }
+
+    .btn-outline-secondary {
+        margin: 0 5px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a, .pagination span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            border-radius: 0; /* Make the boxes square */
+            text-decoration: none;
+        }
+
+            .pagination a:hover {
+                background-color: #f0f0f0; /* Slight grey on hover */
+            }
+
+        .pagination .active a {
+            background-color: #d2b49c; /* Light brown background for the active page */
+            color: #ffffff;
+        }
+
+    .pagination-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .page-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    #current-page {
+        background-color: #d2b49c; /* Light brown background */
+        color: #ffffff; /* White text color */
+        padding padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    #jump-button {
+        background-color: #007bff; /* Light blue background */
+        color: #ffffff;
+        border: none;
+        padding: 5px 10px;
+        margin-left: 10px;
+        border-radius: 5px;
+    }
+
+        #jump-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+    .page-jump {
+        display: flex;
+        align-items: center;
+    }
+
+    .page-input {
+        width: 60px;
+        margin-right: 10px;
+        padding: 5px;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+
+    #modal-page-number-minus, #modal-page-number-plus, #modal-go-to-page {
+        margin-left: 5px;
+        border-radius: 5px;
+    }
+
+    #modal-page-number-minus, #modal-page-number-plus {
+        background-color: #e0e0e0;
+    }
+
+    #modal-go-to-page {
+        background-color: #0056b3; /* Dark blue background */
+        color: #ffffff;
+    }
+
+        #modal-go-to-page:hover {
+            background-color: #003d7a; /* Even darker blue on hover */
+        }
+</style>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('.btnRestore').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có muốn khôi phục lại dữ liệu này  không?")) {
+                    $.ajax({
+                        url: '/admin/News/restore',
+                        type: 'post',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(true);
+                            }
+                            else {
+                                alert("Khôi phục không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+            $('.btnDelete').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có thực sự muốn xóa nó vĩnh viễn không?")) {
+                    $.ajax({
+                        url: '/admin/News/deletedb',
+                        type: 'post',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(true);
+                            }
+                            else {
+                                alert("Xóa không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

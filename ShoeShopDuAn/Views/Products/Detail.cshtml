@@ -1,0 +1,130 @@
+﻿@model ShoeShopDuAn.Models.SP.Product
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+        <h1 class="display-3 mb-3 animated slideInDown">Chi tiết sản phẩm</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a class="text-body" href="#">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a class="text-body" href="#">Sản phẩm</a></li>
+                <li class="breadcrumb-item text-dark active" aria-current="page">@Model.Title</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container-xxl py-6">
+    <div class="container">
+        <div class="row">
+            <!-- Image Gallery -->
+            <div class="col-lg-7">
+                @if (Model.ProductImage != null && Model.ProductImage.Any())
+                {
+                    <div class="single_product_pics">
+                        <div class="single_product_image">
+                            <div class="single_product_image_background"
+                                 style="background-image: url('@(Model.ProductImage.FirstOrDefault(x => x.IsDefault)?.Image ?? "~/images/default.png")');">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 thumbnails_col">
+                                <div class="single_product_thumbnails d-flex justify-content-start">
+                                    <ul class="list-inline">
+                                        @foreach (var item in Model.ProductImage)
+                                        {
+                                            <li class="list-inline-item">
+                                                <img src="@item.Image" alt="" data-image="@item.Image" onclick="updateMainImage('@item.Image')" class="thumbnail-image @(item.IsDefault ? "active" : "")" />
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <!-- Product Information -->
+            <div class="col-lg-5">
+                <h2 class="display-6 mb-4 font-weight-bold">@Model.Title</h2>
+                <h4>Giá:</h4>
+                <p class="text-danger display-5">@String.Format("{0:0,0 ₫}", Model.Price)</p>  <!-- Updated class for larger red text -->
+
+                <div class="mt-4">
+                    <h5>Mô tả sản phẩm:</h5>
+                    <p>
+                        @Model.Description
+                    </p>
+                </div>
+
+                <!-- Input for quantity -->
+                <div class="mt-3">
+                    <label for="quantity" class="form-label">Số lượng:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control" style="width: 100px;">
+                </div>
+
+                <!-- Add to cart button -->
+                <button type="button" href=""class="btn btn-primary mt-3 btnAddToCart" data-id="@Model.Id">
+                    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
+                </button>
+            </div>
+        </div>
+
+        <!-- Chi tiết sản phẩm -->
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <h5>Chi tiết sản phẩm:</h5>
+                <div>
+                    @Html.Raw(Model.Detail)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .single_product_pics img {
+        max-width: 100%;
+    }
+
+    .single_product_thumbnails {
+        gap: 10px;
+    }
+
+        .single_product_thumbnails img {
+            cursor: pointer;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+            .single_product_thumbnails img:hover {
+                border-color: #007bff;
+            }
+
+    .single_product_image_background {
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: 400px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script>
+    // Updates the main product image in the gallery
+    function updateMainImage(imageSrc) {
+        document.querySelector(".single_product_image_background").style.backgroundImage = 'url(' + imageSrc + ')';
+    }
+
+    // Add product to cart with AJAX
+</script>
+@section scripts{
+    <script src="~/Content/Product/js/single_custom.js"></script>
+}

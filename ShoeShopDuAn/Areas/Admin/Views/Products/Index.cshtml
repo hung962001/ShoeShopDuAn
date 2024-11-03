@@ -1,0 +1,191 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.Product>
+    @using System.Globalization
+
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-primary mb-0">Trang chủ</h3>
+            <ul class="breadcrumbs list-inline mb-0">
+                <li class="list-inline-item">
+                    <a href="#" class="text-secondary">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Thanh tìm kiếm và Nút "Thêm mới" -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/admin/products/add" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+            <form action="@Url.Action("Index", "Products")" method="get" class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="searchProduct" value="@Request.QueryString["searchProduct"]" placeholder="Tìm kiếm ..." class="form-control border-primary" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Bảng hiển thị sản phẩm -->
+        <div class="col-md-12">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Danh sách sản phẩm</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover table-striped mb-0 text-center">
+                        <!-- Cập nhật phần header của bảng -->
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Mô tả</th>
+                                <th scope="col">Giá</th> <!-- Thêm cột Giá -->                               
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Sửa/Xóa</th>
+                            </tr>
+                        </thead>
+
+                        <!-- Cập nhật phần thân của bảng -->
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var i = (Model.PageNumber - 1) * Model.PageSize + 1;
+                                foreach (var item in Model)
+                                {
+                            <tr data-title="@item.Title" data-date="@item.CreatedDate">
+                                <td>@i</td>
+                                <td>@item.Id</td>
+                                <td><img src="@item.Image" width="70" /></td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.Price.ToString("C", new CultureInfo("vi-VN"))</td> <!-- Định dạng giá thành VND -->
+                                <
+                                <td>@item.Quantity</td>
+                                <td>
+                                    <a href="/Admin/Products/Edit/@item.Id" class="text-warning me-2">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" data-id="@item.Id" class="text-danger btnDelete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">Không tìm thấy dữ liệu nào!</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            <div class="pagination-container text-center mt-4">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchProduct = Request.QueryString["searchProduct"] }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .page-inner {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .breadcrumbs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .breadcrumbs li {
+            display: inline;
+        }
+
+    .icon-home, .icon-arrow-right {
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .card-header {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .table {
+        border-radius: 8px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    .input-group {
+        width: 300px;
+    }
+
+    .form-inline .input-group .form-control {
+        border-radius: 4px 0 0 4px;
+    }
+
+    .form-inline .input-group .input-group-append .btn {
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.btnDelete').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có thực sự muốn xóa nó không?")) {
+                    $.ajax({
+                        url: '/admin/Products/delete',
+                        type: 'post',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                button.closest('tr').remove();
+                            } else {
+                                alert("Xóa không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+}

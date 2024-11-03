@@ -1,0 +1,198 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.Product>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <!-- Thanh tìm kiếm nằm bên phải -->
+            <form action="@Url.Action("Trash", "Products")" method="get" class="form-inline float-right">
+                <div class="input-group">
+                    <input type="text" name="searchProduct" value="@Request.QueryString["searchProduct"]" placeholder="Tìm kiếm ..." class="form-control" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-search pe-1">
+                            <i class="fa fa-search search-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Thùng rác</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="@Url.Action("Index", "Home")">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="current">Thùng rác</li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Danh sách sản phẩm đã xóa</div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-head-bg-success">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Mô tả</th>
+                                <th scope="col">Ngày</th>
+                                <th scope="col">Khôi phục/Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var i = (Model.PageNumber - 1) * Model.PageSize + 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr data-title="@item.Title" data-date="@item.CreatedDate">
+                                        <td>@i</td>
+                                        <td>@item.Id</td>
+                                        <td><img src="@item.Image" width="70" alt="Product Image" /></td>
+                                        <td>@item.Title</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <a href="#" data-id="@item.Id" class="btnRestore btn btn-success">
+                                                <i class="fas fa-undo-alt"></i> Khôi phục
+                                            </a>
+                                            <a href="#" data-id="@item.Id" class="btnDelete btn btn-danger">
+                                                <i class="fas fa-trash-alt"></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">Không có dữ liệu!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Phân trang -->
+            <div class="pagination-container text-center">
+                @Html.PagedListPager(Model, page => Url.Action("Trash", new { page, searchProduct = Request.QueryString["searchProduct"] }), PagedListRenderOptions.Classic)
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pagination-container {
+        margin-top: 20px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a, .pagination span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            text-decoration: none;
+        }
+
+            .pagination a:hover {
+                background-color: #f0f0f0;
+            }
+
+        .pagination .active a {
+            background-color: #d2b49c;
+            color: #ffffff;
+        }
+
+    .btnRestore, .btnDelete {
+        margin-right: 5px;
+    }
+
+    .btnRestore {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btnDelete {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.btnRestore').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có muốn khôi phục lại sản phẩm này không?")) {
+                    $.ajax({
+                        url: '/admin/products/restore',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(true);
+                            } else {
+                                alert("Khôi phục không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('.btnDelete').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này không?")) {
+                    $.ajax({
+                        url: '/admin/products/deletedb',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(true);
+                            } else {
+                                alert("Xóa không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

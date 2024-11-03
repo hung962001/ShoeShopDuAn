@@ -1,0 +1,237 @@
+﻿@model ShoeShopDuAn.Models.SP.Product
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Danh mục sản phẩm</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="/Admin/Category">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            @using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="card">
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#activity" data-toggle="tab">Thông tin chung</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#timeline" data-toggle="tab">Hình ảnh</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <!-- Tab Thông tin chung -->
+                            <div class="active tab-pane" id="activity">
+                                <div class="form-group">
+                                    <label for="Title">Tên sản phẩm</label>
+                                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Tên sản phẩm" })
+                                    @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ProductCode">Mã code product</label>
+                                    @Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", @placeholder = "Mã sản phẩm" })
+                                    @Html.ValidationMessageFor(x => x.ProductCode, null, new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="CategoryId">Danh mục</label>
+                                    @Html.DropDownListFor(x => x.CategoryId, (IEnumerable<SelectListItem>)ViewBag.ProductCategory, "Chọn danh mục", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.CategoryId, null, new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Description">Mô tả</label>
+                                    @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả sản phẩm" })
+                                    @Html.ValidationMessageFor(x => x.Description, null, new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Detail">Chi tiết sản phẩm</label>
+                                    @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
+                                    @Html.ValidationMessageFor(x => x.Detail, null, new { @class = "text-danger" })
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="Quantity">Số lượng</label>
+                                            @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control", @Value = "1" })
+                                            @Html.ValidationMessageFor(x => x.Quantity, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="Price">Giá</label>
+                                            @Html.TextBoxFor(x => x.Price, new { @class = "form-control price-hidden", @id = "Price" })
+                                            @Html.ValidationMessageFor(x => x.Price, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="PriceSale">Giá khuyến mãi</label>
+                                            <input type="text" name="demoPriceSale" id="demoPriceSale" class="form-control auto" data-a-dec="," data-a-sep="." value="0" />
+                                            @Html.HiddenFor(x => x.PriceSale, new { @class = "price-sale-hidden" })
+                                            @Html.ValidationMessageFor(x => x.PriceSale, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox">
+                                                @Html.CheckBoxFor(x => x.IsVisible, new { @class = "custom-control-input", @id = "customCheckbox2", @checked = "checked" })
+                                                <label for="customCheckbox2" class="custom-control-label">Hiển thị</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.tab-pane -->
+                            <!-- Tab Hình ảnh -->
+                            <div class="tab-pane" id="timeline">
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <input type="button" class="btn btn-primary" id="iTaiAnh" onclick="BrowseServer();" value="Tải ảnh" />
+                                    </div>
+                                    <div class="col-md-12">
+                                        <table class="table table-hover " id="tbAnhSanPham">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">Ảnh</th>
+                                                    <th class="text-center">Ảnh đại diện</th>
+                                                    <th class="text-center">Thao tác</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbHtml">
+                                                @if (ViewBag.Images != null)
+                                                {
+                                                    int index = 0;
+                                                    foreach (var img in ViewBag.Images)
+                                                    {
+                                                        index++;
+                                                        <tr id="trow_@index">
+                                                            <td class="text-center">@index</td>
+                                                            <td class="text-center"><img width="80" src="@img" /> <input type='hidden' value="@img" name="Images" /></td>
+                                                            <td class="text-center"><input type="radio" name="rDefault" value="@index" @(index == 1 ? "checked='checked'" : "") /></td>
+                                                            <td class="text-center"><a href="#" data-id="@index" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                        <input type="hidden" id="tCurrentId" value="0" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Thêm mới</button>
+                    </div>
+                </div><!-- /.card -->
+            }
+        </div>
+    </div>
+</div>
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>
+@section scripts
+{
+    <script>
+        function BrowseServer() {
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (fileUrl) {
+                addImageProduct(fileUrl);
+            };
+            finder.popup();
+        }
+
+        $(document).ready(function () {
+            CKEDITOR.replace('txtDetail', {
+                customConfig: '/content/ckeditor/config.js',
+                extraAllowedContent: 'span',
+            });
+            $('#Price').on('input', function () {
+                var value = $(this).val().replace(/\D/g, ""); // Chỉ giữ số
+                if (value) {
+                    $(this).val(parseFloat(value).toLocaleString('vi-VN')); // Định dạng theo kiểu Việt Nam
+                }
+            });
+           
+
+            function formatPrice(value) {
+                var number = parseFloat(value.replace(/\./g, '').replace(/,/g, '.'));
+                if (isNaN(number)) return '0';
+                return number.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+            }
+
+            $('body').on('click', '.btnXoaAnh', function () {
+                var conf = confirm('Bạn có muốn xóa ảnh này không?');
+                if (conf === true) {
+                    var _id = $(this).data('id');
+                    $('#trow_' + _id).fadeTo('fast', 0.5, function () {
+                        $(this).slideUp('fast', function () { $(this).remove(); });
+                    });
+                    var temp = $('#tCurrentId').val();
+                    var currentId = parseInt(temp) - 1;
+                    $('#tCurrentId').val(currentId);
+                }
+            });
+        });
+
+        function addImageProduct(url) {
+            var temp = $('#tCurrentId').val();
+            var currentId = parseInt(temp) + 1;
+            var str = "";
+            if (currentId == 1) {
+                str += `<tr id="trow_${currentId}">
+                                        <td class="text-center">${currentId}</td>
+                                        <td class="text-center"><img width="80" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
+                                        <td class="text-center"><input type="radio" name="rDefault" value="${currentId}" checked="checked"/></td>
+                                        <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                    </tr>`;
+            } else {
+                str += `<tr id="trow_${currentId}">
+                                        <td class="text-center">${currentId}</td>
+                                        <td class="text-center"><img width="80" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
+                                        <td class="text-center"><input type="radio" name="rDefault" value="${currentId}"/></td>
+                                        <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                    </tr>`;
+            }
+            $('#tbHtml').append(str);
+            $('#tCurrentId').val(currentId);
+        }
+    </script>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+

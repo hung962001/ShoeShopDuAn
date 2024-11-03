@@ -1,0 +1,91 @@
+﻿@model ShoeShopDuAn.Models.SP.News
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header mb-4">
+            <h3 class="fw-bold text-primary">Thêm bài viết </h3>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="/Admin/News">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="current">Thêm mới</li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-info text-white text-center">
+                    <h5 class="mb-0">Thêm bài viết</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-6 col-lg-8">
+                        @using (Html.BeginForm("Add", "News", FormMethod.Post, new { }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(false)
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Tiêu đề bài viết</label>
+                                @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Nhập tiêu đề bài viết" })
+                                @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Tải ảnh</label>
+                                @Html.TextBoxFor(x => x.Image, new { @class = "form-control", @id = "txtImage", @placeholder = "URL hình ảnh" })
+                                <input type="button" value="Chọn ảnh" class="btn btn-primary mt-2" onclick="BrowseSever('txtImage')" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Tóm tắt</label>
+                                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Tóm tắt ngắn về bài viết" })
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Chi tiết</label>
+                                @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail", @placeholder = "Nội dung chi tiết bài viết" })
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Lưu bài viết</button>
+                                <a href="@Url.Action("Index", "News")" class="btn btn-danger">Hủy bỏ</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CKEditor và CKFinder -->
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>
+
+@section scripts {
+    <script>
+        function BrowseSever(field) {
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (fileUrl) {
+                document.getElementById(field).value = fileUrl;
+            };
+            finder.popup();
+        }
+
+        $(document).ready(function () {
+            CKEDITOR.replace('txtDetail', {
+                customConfig: '/content/ckeditor/config.js',
+                extraAllowedContent: 'span',
+            });
+        });
+    </script>
+}

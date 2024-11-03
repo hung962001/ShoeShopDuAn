@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ShoeShopDuAn.Models.SP.Product>
+
+@foreach (var product in Model)
+{
+<div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="product-item @(product.ProductCategory != null ? product.ProductCategory.Alias : "default-category")">
+        <!-- Thêm kiểm tra null -->
+        <div class="position-relative bg-light overflow-hidden">
+            <img class="img-fluid w-100" src="@Url.Content(product.ProductImage?.FirstOrDefault()?.Image ?? "~/Content/Web/img/about.jpg")" alt="@product.Title">
+            <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
+        </div>
+        <div class="text-center p-4">
+            <a class="d-block h5 mb-2" href="/chi-tiet/@product.Alias">@product.Title</a>
+            <span class="text-primary fw-bold">@product.Price.ToString("N0") VND</span>
+        </div>
+        <div class="d-flex justify-content-center border-top py-2">
+            <small>
+                <a class="btnAddToCart" href="#" data-id="@product.Id">
+                    <i class="fa fa-shopping-cart text-primary me-2"></i>Thêm vào giỏ hàng
+                </a>
+            </small>
+        </div>
+    </div>
+</div>
+}    
+<style>
+    .product-item img {
+        width: 100%;
+        height: 250px; /* Chiều cao cố định */
+        object-fit: cover; /* Đảm bảo hình ảnh giữ đúng tỉ lệ */
+    }
+
+</style>

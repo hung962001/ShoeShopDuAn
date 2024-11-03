@@ -1,0 +1,209 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.Order>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-primary mb-0">Trang chủ</h3>
+            <ul class="breadcrumbs list-inline mb-0">
+                <li class="list-inline-item">
+                    <a href="#" class="text-secondary">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Thanh tìm kiếm và Nút "Thêm mới" -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/admin/news/add" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+            <form action="@Url.Action("Index", "Order")" method="get" class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="searchNews" value="@Request.QueryString["searchNews"]" placeholder="Tìm kiếm đơn hàng..." class="form-control border-primary" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Bảng hiển thị danh mục được căn giữa -->
+        <div class="col-md-12 d-flex justify-content-center">
+            <div class="card shadow-sm rounded-lg w-100">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Tình trạng đơn hàng</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover table-striped mb-0 text-center">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Mã đơn hàng</th>
+                                <th scope="col">Tên Khách hàng</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Tiền</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Ngày tạo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var i = ((ViewBag.Page - 1) * ViewBag.PageSize) + 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@ShoeShopDuAn.Common.Common.FormatNumber(item.TotalAmount, 0)</td>
+                                        <td>@(item.TypePayment==1?"Chờ thành toán":"Đã thanh toán")</td>
+                                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <a href="/admin/order/view/@item.Id" class="btn btn-sm btn-success">Xem</a>
+                                            <a href="#" class="btn btn-sm btn-danger btnCapNhat" data-id="@item.Id">Cập nhật</a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }                            
+                            else
+                            {
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">Không có dữ liệu!</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Phân trang -->
+        <div class="pagination-container text-center mt-4">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchNews = Request.QueryString["searchNews"] }))
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cập nhật trạng thái</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="txtOrderId" value="0" />
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select class="form-control" id="ddTrangThai">
+                        <option value="2">
+                            Đã thanh toán
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btnLuu">Lưu</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- Custom Styles -->
+<style>
+    .page-inner {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .breadcrumbs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .breadcrumbs li {
+            display: inline;
+        }
+
+    .icon-home, .icon-arrow-right {
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .card-header {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .table {
+        border-radius: 8px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    .input-group {
+        width: 300px;
+    }
+
+    .form-inline .input-group .form-control {
+        border-radius: 4px 0 0 4px;
+    }
+
+    .form-inline .input-group .input-group-append .btn {
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnCapNhat', function () {
+                var id = $(this).data("id");
+                $('#txtOrderId').val(id);
+                $('#modal-default').modal('show');
+            });
+
+            $('body').on('click', '#btnLuu', function () {
+                var id = $('#txtOrderId').val();
+                var tt = $('#ddTrangThai').val();
+                $.ajax({
+                    url: '/admin/order/UpdateTT',
+                    type: 'POST',
+                    data: { id: id, trangthai: tt },
+                    success: function (res) {
+                        if (res.Success) {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,83 @@
+﻿@model ShoeShopDuAn.Models.SP.Order
+@using PagedList;
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="card shadow-sm border-light">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title">Chi tiết đơn hàng</h3>
+        </div>
+        <div class="card-body p-4">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Mã đơn hàng:</strong></label>
+                        <p class="form-control-plaintext">@Model.Code</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Họ tên khách hàng:</strong></label>
+                        <p class="form-control-plaintext">@Model.CustomerName</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Tổng tiền:</strong></label>
+                        <p class="form-control-plaintext text-danger">@ShoeShopDuAn.Common.Common.FormatNumber(Model.TotalAmount, 0) đ</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Số điện thoại:</strong></label>
+                        <p class="form-control-plaintext">@Model.Phone</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Ngày tạo:</strong></label>
+                        <p class="form-control-plaintext">@Model.CreatedDate.ToString("dd/MM/yyyy")</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Email:</strong></label>
+                        <p class="form-control-plaintext">@Model.Email</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><strong>Trạng thái thanh toán:</strong></label>
+                        <p class="form-control-plaintext">@((Model.TypePayment == 1) ? "Chưa thanh toán" : "Đã thanh toán")</p>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="mt-4 mb-3 text-secondary">Danh sách sản phẩm</h4>
+                    <div class="table-responsive">
+                        @Html.Action("Partial_SanPham", "Order", new { id = Model.Id })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <button class="btn btn-primary" onclick="window.print();"><i class="fa fa-print"></i> In hóa đơn</button>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/Content/Product/js/categories_custom.js"></script>
+}

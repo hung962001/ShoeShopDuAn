@@ -1,0 +1,160 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.Category>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Trash";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="page-header mb-4">
+            <h3 class="fw-bold text-primary">Thùng rác</h3>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="current">Thùng rác</li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-danger text-white text-center">
+                    <h5 class="mb-0">Danh sách danh mục đã xóa</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Mô tả chi tiết</th>
+                                <th scope="col">Ngày</th>
+                                <th scope="col">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var i = (Model.PageNumber - 1) * Model.PageSize + 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr data-title="@item.Title" data-date="@item.CreatedDate">
+                                        <td>@i</td>
+                                        <td>@item.Id</td>
+                                        <td>@item.Title</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <a href="#" data-id="@item.Id" class="btn btn-success btnRestore">
+                                                <i class="fas fa-undo-alt"></i> Khôi phục
+                                            </a>
+                                            <a href="#" data-id="@item.Id" class="btn btn-danger btnDelete">
+                                                <i class="fas fa-trash-alt"></i> Xóa vĩnh viễn
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center">Không tìm thấy kết quả nào!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Phần phân trang -->
+            <div class="pagination-container text-center">
+                @Html.PagedListPager(Model, page => Url.Action("Trash", new { page, searchCategories = Request.QueryString["searchCategories"] }), PagedListRenderOptions.Classic)
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pagination-container {
+        margin-top: 20px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+        .table th {
+            background-color: #f8f9fa; /* Màu nền cho tiêu đề bảng */
+        }
+
+    .btnRestore, .btnDelete {
+        margin-right: 5px;
+    }
+
+    .btn-success {
+        background-color: #28a745; /* Màu xanh cho nút khôi phục */
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545; /* Màu đỏ cho nút xóa */
+        border: none;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+</style>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.btnRestore').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có muốn khôi phục lại dữ liệu này không?")) {
+                    $.ajax({
+                        url: '/admin/category/restore',
+                        type: 'post',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(true);
+                            } else {
+                                alert("Khôi phục không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('.btnDelete').on('click', function () {
+                var button = $(this);
+                var id = button.data('id');
+                if (confirm("Bạn có thực sự muốn xóa nó vĩnh viễn không?")) {
+                    $.ajax({
+                        url: '/admin/category/deletedb',
+                        type: 'post',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(true);
+                            } else {
+                                alert("Xóa không thành công");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

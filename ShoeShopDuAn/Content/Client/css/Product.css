@@ -1,0 +1,58 @@
+﻿<style >
+body {
+    background-color: #000000; /* Black background */
+    color: #d3d3d3; /* Light gray text */
+}
+
+.card {
+    background-color: #1a1a1a; /* Dark gray background for cards */
+    color: #d3d3d3; /* Light gray text */
+}
+
+.form-control, .form-control:focus {
+    background-color: #333333; /* Dark gray background for form controls */
+    color: #d3d3d3; /* Light gray text */
+    border: 1px solid #555555; /* Darker gray border */
+}
+
+.navbar, .navbar-nav, .breadcrumb-item a {
+    color: #d3d3d3; /* Light gray text for navbar and breadcrumbs */
+}
+
+.btn-success {
+    background-color: #4caf50; /* Green button background */
+    border-color: #4caf50; /* Green button border */
+    color: #ffffff; /* White button text */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Blue button background */
+    border-color: #007bff; /* Blue button border */
+    color: #ffffff; /* White button text */
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Red button background */
+    border-color: #dc3545; /* Red button border */
+    color: #ffffff; /* White button text */
+}
+
+.text-danger {
+    color: #dc3545; /* Red color for validation messages */
+}
+
+.table thead th {
+    background-color: #2a2a2a; /* Darker gray background for table headers */
+    color: #d3d3d3; /* Light gray text */
+}
+
+.table tbody tr {
+    background-color: #1a1a1a; /* Darker gray background for table rows */
+    color: #d3d3d3; /* Light gray text */
+}
+
+    .table tbody tr:hover {
+        background-color: #333333; /* Slightly lighter gray for hover effect */
+    }
+
+</style >

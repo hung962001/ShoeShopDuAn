@@ -1,0 +1,128 @@
+﻿<div class="sidebar-logo">
+    <!-- Logo Header -->
+ 
+    <!-- End Logo Header -->
+</div>
+<div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-content">
+        <ul class="nav nav-secondary">
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a href="~/Contents/users.html">
+                    <i class="fas fa-home"></i>
+                    <p>Trang chủ admin</p>
+                </a>
+            </li>
+
+            <!-- Products -->
+            <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#products">
+                    <i class="fas fa-box"></i>
+                    <p>Sản phẩm</p>
+                    <span class="caret"></span>
+                </a>
+                <div class="collapse" id="products">
+                    <ul class="nav nav-collapse">
+                        <li>
+                            <a href="/admin/products/index">
+                                <span class="sub-item">Trang chủ sản phẩm</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/products/add">
+                                <span class="sub-item">Thêm sản phẩm</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/products/edit">
+                                <span class="sub-item">Sửa sản phẩm</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/products/trash">
+                                <span class="sub-item">Thùng rác</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- News -->
+            <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#news">
+                    <i class="fas fa-newspaper"></i>
+                    <p>News</p>
+                    <span class="caret"></span>
+                </a>
+                <div class="collapse" id="news">
+                    <ul class="nav nav-collapse">
+                        <li>
+                            <a href="/admin/news/index">
+                                <span class="sub-item">Trang chủ news</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/news/add">
+                                <span class="sub-item">Thêm bài viết</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/news/edit">
+                                <span class="sub-item">Sửa bài viết</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/news/trash">
+                                <span class="sub-item">Thùng rác</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Product Categories -->
+            <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#product-categories">
+                    <!-- Match ID with collapse div -->
+                    <i class="fas fa-tags"></i>
+                    <p>Loại sản phẩm</p>
+                    <span class="caret"></span>
+                </a>
+                <div class="collapse" id="product-categories">
+                    <!-- Corrected to match the href above -->
+                    <ul class="nav nav-collapse">
+                        <li><a href="/admin/productcategory/index"><span class="sub-item">Trang chủ loại sản phẩm</span></a></li>
+                        <li><a href="/admin/productcategory/add"><span class="sub-item">Thêm loại</span></a></li>
+                        <li><a href="/admin/productcategory/edit"><span class="sub-item">Sửa loại</span></a></li>
+                        <li><a href="/admin/productcategory/trash"><span class="sub-item">Thùng rác</span></a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Reports -->
+            <li class="nav-item">
+                <a href="~/Contents/reports.html">
+                    <i class="fas fa-chart-line"></i>
+                    <p>Báo cáo thống kê</p>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="nav-item">
+                <a href="~/Contents/users.html">
+                    <i class="fas fa-user"></i>
+                    <p>Người dùng</p>
+                </a>
+            </li>
+
+            <!-- Order Status -->
+            <li class="nav-item">
+                <a href="/admin/order/index">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Tình trạng đơn hàng</p>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>

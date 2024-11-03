@@ -1,0 +1,102 @@
+﻿@model ShoeShopDuAn.Models.SP.Category
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="page-header mb-4">
+            <h3 class="fw-bold text-primary">Sửa danh mục sản phẩm</h3>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="/Admin/Category">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="current">Sửa danh mục</li>
+            </ul>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card shadow-sm rounded-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Sửa danh mục sản phẩm</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-8 mx-auto">
+                        @using (Html.BeginForm("Edit", "Category", FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(false)
+
+                            <div class="mb-4">
+                                <label for="titleInput" class="form-label fw-bold">Tên danh mục</label>
+                                @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Nhập tên danh mục" })
+                                @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="descriptionInput" class="form-label fw-bold">Mô tả</label>
+                                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Nhập mô tả danh mục", rows = 4 })
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Lưu danh mục</button>
+                                <a href="/Admin/Category" class="btn btn-danger">Quay lại</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .page-header {
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 20px;
+    }
+
+    .breadcrumbs {
+        list-style: none;
+        padding: 0;
+    }
+
+        .breadcrumbs li {
+            display: inline;
+        }
+
+    .separator {
+        margin: 0 5px;
+        font-size: 18px;
+    }
+
+    .card {
+        margin-top: 20px;
+    }
+
+    .form-label {
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+        .btn-primary:hover, .btn-danger:hover {
+            opacity: 0.9;
+        }
+</style>

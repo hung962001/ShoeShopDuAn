@@ -1,0 +1,176 @@
+﻿@model PagedList.IPagedList<ShoeShopDuAn.Models.SP.Category>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <!-- Tiêu đề và Breadcrumbs -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-primary mb-0">Trang chủ</h3>
+            <ul class="breadcrumbs list-inline mb-0">
+                <li class="list-inline-item">
+                    <a href="#" class="text-secondary">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Thanh tìm kiếm và Nút "Thêm mới" -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/admin/category/add" class="btn btn-success shadow-sm">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+            <form action="@Url.Action("Index", "Category")" method="get" class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="searchCategories" value="@Request.QueryString["searchCategories"]" placeholder="Tìm kiếm danh mục..." class="form-control border-primary" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Bảng hiển thị danh mục được căn giữa -->
+        <div class="col-md-12 d-flex justify-content-center">
+            <div class="card shadow-sm rounded-lg w-100">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Danh mục</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover table-striped mb-0 text-center">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Tiêu đề</th>
+                                <th scope="col">Mô tả chi tiết</th>
+                                <th scope="col">Ngày</th>
+                                <th scope="col">Sửa/Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var i = (Model.PageNumber - 1) * Model.PageSize + 1;
+                                foreach (var items in Model)
+                                {
+                                    <tr data-title="@items.Title" data-date="@items.CreatedDate">
+                                        <td>@i</td>
+                                        <td>@items.Id</td>
+                                        <td>@items.Title</td>
+                                        <td>@items.Description</td>
+                                        <td>@items.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <a href="/Admin/Category/Edit/@items.Id" class="text-warning me-2">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="#" data-id="@items.Id" class="text-danger btnDelete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Không tìm thấy kết quả nào!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .page-inner {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .breadcrumbs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .breadcrumbs li {
+            display: inline;
+        }
+
+    .icon-home, .icon-arrow-right {
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .card-header {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .table {
+        border-radius: 8px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    .input-group {
+        width: 300px;
+    }
+
+    .form-inline .input-group .form-control {
+        border-radius: 4px 0 0 4px;
+    }
+
+    .form-inline .input-group .input-group-append .btn {
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+
+@section scripts {
+    <script>
+        $('.btnDelete').on('click', function () {
+            var button = $(this);
+            var id = button.data('id');
+            if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+                $.ajax({
+                    url: '/admin/category/delete',
+                    type: 'post',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload(true);
+                        } else {
+                            alert("Xóa không thành công");
+                        }
+                    },
+                    error: function () {
+                        alert("Đã xảy ra lỗi. Vui lòng thử lại.");
+                    }
+                });
+            }
+        });
+    </script>
+}
